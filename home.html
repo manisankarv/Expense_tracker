@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            width: 50%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .options {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+
+        }
+       
+        .options button {
+            width: auto;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Expense Monitor</h2>
+        <input type="text" id="description" placeholder="Expense Description">
+        <input type="number" id="amount" placeholder="Amount">
+        <button id="addExpenseBtn">Add Expense</button>
+    </div>
+
+    <div class="options">
+        <button onclick="window.location.href='total_expense.html'">Total Expense</button>
+        <button onclick="window.location.href='statistics.html'">Statistics</button>
+        <button onclick="window.location.href='all_expenses.html'">All Expenses</button>
+    </div>
+
+    <script>
+        class ExpenseMonitor {
+            constructor() {
+                this.expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            }
+
+            addExpense(description, amount) {
+                const dateTime = new Date().toLocaleString();
+                this.expenses.push({ description, amount, dateTime });
+                localStorage.setItem("expenses", JSON.stringify(this.expenses));
+            }
+        }
+
+        const monitor = new ExpenseMonitor();
+
+        document.getElementById("addExpenseBtn").addEventListener("click", () => {
+            const description = document.getElementById("description").value;
+            const amount = parseFloat(document.getElementById("amount").value);
+            
+            if (description && !isNaN(amount) && amount > 0) {
+                monitor.addExpense(description, amount);
+                document.getElementById("description").value = "";
+                document.getElementById("amount").value = "";
+                alert("Expense added successfully!");
+            } else {
+                alert("Please enter a valid description and amount.");
+            }
+        });
+    </script>
+</body>
+</html>

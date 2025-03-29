@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eef2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            width: 50%;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .chart-container {
+            position: relative;
+            width: 80%;
+            max-width: 400px;
+            margin: auto;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Expense Statistics</h2>
+        <div class="chart-container">
+            <canvas id="expenseChart"></canvas>
+        </div>
+        <button onclick="window.location.href='home.html'">Back</button>
+    </div>
+
+    <script>
+        function showStatistics() {
+            const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            const ctx = document.getElementById("expenseChart").getContext("2d");
+            
+            let expenseMap = {};
+            expenses.forEach(exp => {
+                if (!expenseMap[exp.description]) {
+                    expenseMap[exp.description] = 0;
+                }
+                expenseMap[exp.description] += exp.amount;
+            });
+
+            const labels = Object.keys(expenseMap);
+            const data = Object.values(expenseMap);
+            
+            new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    aspectRatio: 1.5
+                }
+            });
+        }
+        
+        showStatistics();
+    </script>
+</body>
+</html>

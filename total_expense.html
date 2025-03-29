@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Expense</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eef2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            width: 50%;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        h3 {
+            color: #34495e;
+            font-weight: 400;
+        }
+        .expense-list {
+            text-align: left;
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #ecf0f1;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: 400;
+        }
+        button {
+            margin-top: 15px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Total Expense</h2>
+        <h3 id="totalAmount">Total: Rs.0</h3>
+        <h3>Expense Percentage</h3>
+        <ul id="expensePercentages" class="expense-list"></ul>
+        <button onclick="window.location.href='home.html'">Back</button>
+    </div>
+
+    <script>
+        function calculateTotalExpense() {
+            const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            let total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            document.getElementById("totalAmount").textContent = `Total: Rs.${total}`;
+
+            let expenseMap = {};
+            expenses.forEach(exp => {
+                if (!expenseMap[exp.description]) {
+                    expenseMap[exp.description] = 0;
+                }
+                expenseMap[exp.description] += exp.amount;
+            });
+
+            const expensePercentages = document.getElementById("expensePercentages");
+            expensePercentages.innerHTML = "";
+            Object.keys(expenseMap).forEach(desc => {
+                let percentage = ((expenseMap[desc] / total) * 100).toFixed(2);
+                let li = document.createElement("li");
+                li.textContent = `${desc}: ${percentage}%`;
+                expensePercentages.appendChild(li);
+            });
+        }
+
+        calculateTotalExpense();
+    </script>
+</body>
+</html>
