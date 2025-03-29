@@ -55,6 +55,18 @@
             justify-content: space-between;
             align-items: center;
         }
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
         button {
             margin-top: 20px;
             padding: 10px 18px;
@@ -78,7 +90,7 @@
         <div class="expense-list">
             <ul id="expenseList"></ul>
         </div>
-        <button onclick="window.location.href='index.html'">Back</button>
+        <button onclick="window.location.href='home.html'">Back</button>
     </div>
 
     <script>
@@ -87,11 +99,20 @@
             const expenseList = document.getElementById("expenseList");
             expenseList.innerHTML = "";
             
-            expenses.forEach(exp => {
+            expenses.forEach((exp, index) => {
                 let li = document.createElement("li");
-                li.innerHTML = `<span>${exp.description}: Rs.${exp.amount}</span> <small>${exp.dateTime}</small>`;
+                li.innerHTML = `<span>${exp.description}: Rs.${exp.amount}</span> 
+                                <small>${exp.dateTime}</small> 
+                                <button class='delete-btn' onclick='deleteExpense(${index})'>Clear</button>`;
                 expenseList.appendChild(li);
             });
+        }
+
+        function deleteExpense(index) {
+            let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            expenses.splice(index, 1);
+            localStorage.setItem("expenses", JSON.stringify(expenses));
+            displayAllExpenses();
         }
 
         displayAllExpenses();
